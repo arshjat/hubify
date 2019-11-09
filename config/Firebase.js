@@ -1,26 +1,14 @@
 import firebase from 'firebase'
-import {
-    API_KEY,
-    AUTH_DOMAIN,
-    DATABASE_URL,
-    PROJECT_ID,
-    MESSAGE_SENDER_ID,
-    MESSAGING_SENDER_ID,
-    APP_ID,
-    MEASUREMENT_ID,
-    STORAGE_BUCKET
-} from 'react-native-dotenv'
 
 const firebaseConfig = {
-    apiKey: API_KEY,
-    authDomain: AUTH_DOMAIN,
-    databaseURL: DATABASE_URL,
-    projectId: PROJECT_ID,
-    storageBucket: STORAGE_BUCKET,
-    messageSenderId: MESSAGE_SENDER_ID,
-    messagingSenderId:MESSAGING_SENDER_ID,
-    appId: APP_ID,
-    measurementId:MEASUREMENT_ID
+    apiKey: "AIzaSyCLuj7GuGMZBvGdl9jIxoXy-QIEEDevuJg",
+    authDomain: "proto-app-d4763.firebaseapp.com",
+    databaseURL: "https://proto-app-d4763.firebaseio.com",
+    projectId: "proto-app-d4763",
+    storageBucket: "proto-app-d4763.appspot.com",
+    messagingSenderId: "936519665482",
+    appId: "1:936519665482:web:634bbbc4cd94c0286163b3",
+    measurementId: "G-4VWEHGNP8V"
 }
 
 // Initialize Firebase
