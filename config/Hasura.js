@@ -1,0 +1,1 @@
+export const GRAPHQL_ENDPOINT = 'https://proto-app-backend.herokuapp.com/v1/graphql';
