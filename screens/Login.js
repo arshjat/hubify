@@ -3,7 +3,7 @@ import { View, TextInput, StyleSheet, TouchableOpacity, Text, Button } from 'rea
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { updateEmail, updatePassword, login } from '../actions/user'
-
+import Swiper from 'react-native-swiper'
 class Login extends React.Component {
     handleLogin = () => {
         this.props.login()
@@ -12,7 +12,13 @@ class Login extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <Swiper showsButtons={false} loop={false} activeDotStyle={{ width: 20 }}>
+                <View style={styles.imageContainer}>
+						<Text style={styles.infoText}>
+							Grow your business with effective communication with your audience.
+						</Text>
+				</View>
+                <View style={styles.container}>
                 <TextInput
                     style={styles.inputBox}
                     value={this.props.user.email}
@@ -35,6 +41,7 @@ class Login extends React.Component {
                     onPress={() => this.props.navigation.navigate('Signup')}
                 />
             </View>
+            </Swiper>
         )
     }
 }
