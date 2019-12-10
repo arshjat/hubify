@@ -1,20 +1,41 @@
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 
-import { createStore, applyMiddleware } from 'redux'
-import { Provider } from 'react-redux'
-import thunkMiddleware from 'redux-thunk'
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import  thunkMiddleware  from 'redux-thunk';
+import firebase  from './config/Firebase';
+import { SwitchNavigator } from './navigation/SwitchNavigator';
+import  reducer  from './reducers';
+import { Root, Text, Spinner } from 'native-base';
 
-import SwitchNavigator from './navigation/SwitchNavigator'
-import reducer from './reducers'
+
 const middleware = applyMiddleware(thunkMiddleware)
 const store = createStore(reducer, middleware)
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
+  const [loggingUserIn, setLoggingUserIn]       = useState(true);
+  const [toggleNavigator, setToggleNavigator]   = useState('Login');
+
+  useEffect(() =>{
+    return firebase.auth().onAuthStateChanged(async user => {
+      setLoggingUserIn(true);
+      if(user){
+        setLoggingUserIn(false);
+        setToggleNavigator('Profile')
+      }
+      else{
+        console.log('not user');
+				setLoggingUserIn(false);
+				setToggleNavigator('Login');
+      }
+    })
+  },[]);
+
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
       <AppLoading
@@ -23,12 +44,32 @@ export default function App(props) {
         onFinish={() => handleFinishLoading(setLoadingComplete)}
       />
     );
-  } else {
-    return (
-        <Provider store={store}>
-            <SwitchNavigator />
-        </Provider>
-    );
+  } 
+  else {
+        return (
+          <View style={styles.container}>
+            {
+              (loggingUserIn) ?
+                <View style={{ backgroundColor: '#006699', flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
+                  <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    {/* <Image style={{ width: 70, height: 70 }} source={require('./assets/images/logo_white.png')} /> */}
+                    <Text style={{jiustifyContent: 'center'}}>ExcuseMe</Text>
+                  </View>
+                  <View style={{ marginTop: 170, marginVertical: 50 }}>
+                    <Spinner />
+                    <Text style={{ color: '#fff' }}>Please wait while we&apos;re logging you in.</Text>
+                  </View>
+                </View>
+                :
+                <Provider store={store}>
+                  {
+                    (toggleNavigator === 'Login') ? this.props.navigation.navigate('Login') : this.props.navigation.navigate('Profile')
+                  }
+                </Provider>
+            }
+          </View>
+        );
+    
   }
 }
 
@@ -38,19 +79,10 @@ async function loadResourcesAsync() {
       require('./assets/images/robot-dev.png'),
       require('./assets/images/robot-prod.png'),
     ]),
-    Font.loadAsync({
-      // This is the font that we are using for our tab bar
-    //   ...Ionicons.font,
-      // We include SpaceMono because we use it in HomeScreen.js. Feel free to
-      // remove this if you are not using it in your app
-    //   'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
-    }),
   ]);
 }
 
 function handleLoadingError(error) {
-  // In this case, you might want to report the error to your error reporting
-  // service, for example Sentry
   console.warn(error);
 }
 
