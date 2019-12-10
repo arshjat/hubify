@@ -17,7 +17,7 @@ const SwitchNavigator = createSwitchNavigator(
         }
     },
     {
-        initialRouteName: 'Login'
+        initialRouteName: 'Profile'
     }
 )
 

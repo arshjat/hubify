@@ -1,6 +1,5 @@
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
-import * as Font from 'expo-font';
 import React, { useState, useEffect } from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 
@@ -8,9 +7,10 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import  thunkMiddleware  from 'redux-thunk';
 import firebase  from './config/Firebase';
-import { SwitchNavigator } from './navigation/SwitchNavigator';
-import  reducer  from './reducers';
-import { Root, Text, Spinner } from 'native-base';
+import AuthNavigator from './navigation/AuthNavigator';
+import AppNavigator from './navigation/AppNavigator';
+import reducer  from './reducers';
+import { Text, Spinner } from 'native-base';
 
 
 const middleware = applyMiddleware(thunkMiddleware)
@@ -25,6 +25,7 @@ export default function App(props) {
     return firebase.auth().onAuthStateChanged(async user => {
       setLoggingUserIn(true);
       if(user){
+        console.log(user.email);
         setLoggingUserIn(false);
         setToggleNavigator('Profile')
       }
@@ -52,8 +53,7 @@ export default function App(props) {
               (loggingUserIn) ?
                 <View style={{ backgroundColor: '#006699', flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
                   <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    {/* <Image style={{ width: 70, height: 70 }} source={require('./assets/images/logo_white.png')} /> */}
-                    <Text style={{jiustifyContent: 'center'}}>ExcuseMe</Text>
+                    <Text style={{justifyContent: 'center'}}>ExcuseMe</Text>
                   </View>
                   <View style={{ marginTop: 170, marginVertical: 50 }}>
                     <Spinner />
@@ -63,7 +63,7 @@ export default function App(props) {
                 :
                 <Provider store={store}>
                   {
-                    (toggleNavigator === 'Login') ? this.props.navigation.navigate('Login') : this.props.navigation.navigate('Profile')
+                    (toggleNavigator === 'Login') ? <AuthNavigator /> : <AppNavigator />
                   }
                 </Provider>
             }
