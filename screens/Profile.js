@@ -1,11 +1,15 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Button } from 'react-native'
 
 class Profile extends React.Component {
     render() {
         return (
             <View style={styles.container}>
                 <Text>Profile Screen</Text>
+                <Button
+                    title="Sign Out"
+                    onPress={() => this.props.navigation.navigate('Login')}
+                />
             </View>
         )
     }

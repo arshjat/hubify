@@ -6,8 +6,11 @@ import { updateEmail, updatePassword, login } from '../actions/user'
 import Swiper from 'react-native-swiper'
 class Login extends React.Component {
     handleLogin = () => {
-        this.props.login()
-        this.props.navigation.navigate('Profile')
+        this.props.login().then(()=>
+        {
+            console.log("Logged In !!");
+            this.props.navigation.navigate('Profile');
+        })
     }
 
     render() {
