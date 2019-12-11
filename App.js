@@ -26,6 +26,12 @@ export default function App(props) {
       setLoggingUserIn(true);
       if(user){
         console.log(user.email);
+        const idTokenResult = await user.getIdTokenResult();
+        const hasuraClaim = idTokenResult.claims['https://hasura.io/jwt/claims'];
+        console.log(hasuraClaim);
+
+        
+
         setLoggingUserIn(false);
         setToggleNavigator('Profile')
       }
