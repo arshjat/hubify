@@ -1,5 +1,5 @@
 import { createSwitchNavigator, createAppContainer } from 'react-navigation'
-import Profile from '../screens/Profile'
+import Profile from '../modules/profile/screens/Profile'
 import Login from '../modules/authentication/screens/Login';
 
 const AppNavigator = createSwitchNavigator(
