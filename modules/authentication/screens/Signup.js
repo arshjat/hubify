@@ -1,27 +1,26 @@
 import React from 'react'
-import { View, TextInput, StyleSheet, TouchableOpacity, Text, Button } from 'react-native'
+import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import Firebase from '../../../config/Firebase'
+
+//redux
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { updateEmail, updatePassword, login } from '../actions/user'
-import Swiper from 'react-native-swiper'
-class Login extends React.Component {
-    handleLogin = () => {
-        this.props.login().then(()=>
-        {
-            console.log("Logged In !!");
-            this.props.navigation.navigate('Profile');
-        })
-    }
+import { updateEmail, updatePassword, signup } from '../../../actions/user'
 
+class Signup extends React.Component {
+    state = {
+        email : '',
+        name : '',
+        password : ''
+    }
+    handleSignUp = () => {
+        this.props.signup()
+        this.props.navigation.navigate('Profile')
+    }
+    
     render() {
         return (
-            <Swiper showsButtons={false} loop={false} activeDotStyle={{ width: 20 }}>
-                <View style={styles.imageContainer}>
-						<Text style={styles.infoText}>
-							Grow your business with effective communication with your audience.
-						</Text>
-				</View>
-                <View style={styles.container}>
+            <View style={styles.container}>
                 <TextInput
                     style={styles.inputBox}
                     value={this.props.user.email}
@@ -36,17 +35,13 @@ class Login extends React.Component {
                     placeholder='Password'
                     secureTextEntry={true}
                 />
-                <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
-                    <Text style={styles.buttonText}>Login</Text>
+                <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
+                    <Text style={styles.buttonText}>Signup</Text>
                 </TouchableOpacity>
-                <Button
-                    title="Don't have an account yet? Sign up"
-                    onPress={() => this.props.navigation.navigate('Signup')}
-                />
             </View>
-            </Swiper>
         )
     }
+
 }
 
 const styles = StyleSheet.create({
@@ -70,8 +65,8 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         paddingVertical: 5,
         alignItems: 'center',
-        backgroundColor: '#F6820D',
-        borderColor: '#F6820D',
+        backgroundColor: '#FFA611',
+        borderColor: '#FFA611',
         borderWidth: 1,
         borderRadius: 5,
         width: 200
@@ -87,7 +82,7 @@ const styles = StyleSheet.create({
 })
 
 const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ updateEmail, updatePassword, login }, dispatch)
+    return bindActionCreators({ updateEmail, updatePassword, signup }, dispatch)
 }
 
 const mapStateToProps = state => {
@@ -99,4 +94,4 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Login)
+)(Signup)

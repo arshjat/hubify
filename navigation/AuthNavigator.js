@@ -1,7 +1,7 @@
 import {createSwitchNavigator, createAppContainer } from 'react-navigation';
 
-import Login from '../screens/Login';
-import Signup from '../screens/Signup'
+import Login from '../modules/authentication/screens/Login';
+import Signup from '../modules/authentication/screens/Signup'
 
 
 const AuthNavigator = createSwitchNavigator(
