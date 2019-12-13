@@ -16,6 +16,8 @@ import GET_ALL_USERS from './modules/database-api/hasuraConstants/Mutations';
 import CREATE_USER_MUTATION from './modules/database-api/hasuraConstants/Mutations'; 
 import createApolloClient from './modules/database-api/Apollo';
 
+import HomeScreen from './modules/map/screens/homeScreen';
+
 const middleware = applyMiddleware(thunkMiddleware);
 const store = createStore(reducer, middleware);
 
@@ -30,9 +32,9 @@ export default function App(props) {
       if(user){
         console.log(user.email);
         const idTokenResult = await user.getIdTokenResult();
-        console.log("idtokenresult :" + idTokenResult.issuedAtTime)
         const hasuraClaim = idTokenResult.claims['https://hasura.io/jwt/claims'];
-        console.log("hasuraClaim :" + hasuraClaim);
+        // console.log("idtokenresult :" + idTokenResult.issuedAtTime)
+        // console.log("hasuraClaim :" + hasuraClaim);
         setLoggingUserIn(false);
         setToggleNavigator('Profile')
         
@@ -90,26 +92,27 @@ export default function App(props) {
   } 
   else {
         return (
-          <View style={styles.container}>
-            {
-              (loggingUserIn) ?
-                <View style={{ backgroundColor: '#006699', flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
-                  <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{justifyContent: 'center'}}>ExcuseMe</Text>
-                  </View>
-                  <View style={{ marginTop: 170, marginVertical: 50 }}>
-                    <Spinner />
-                    <Text style={{ color: '#fff' }}>Please wait while we&apos;re logging you in.</Text>
-                  </View>
-                </View>
-                :
-                <Provider store={store}>
-                  {
-                    (toggleNavigator === 'Login') ? <AuthNavigator /> : <AppNavigator />
-                  }
-                </Provider>
-            }
-          </View>
+          // <View style={styles.container}>
+          //   {
+          //     (loggingUserIn) ?
+          //       <View style={{ backgroundColor: '#006699', flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
+          //         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          //           <Text style={{justifyContent: 'center'}}>ExcuseMe</Text>
+          //         </View>
+          //         <View style={{ marginTop: 170, marginVertical: 50 }}>
+          //           <Spinner />
+          //           <Text style={{ color: '#fff' }}>Please wait while we&apos;re logging you in.</Text>
+          //         </View>
+          //       </View>
+          //       :
+          //       <Provider store={store}>
+          //         {
+          //           (toggleNavigator === 'Login') ? <AuthNavigator /> : <AppNavigator />
+          //         }
+          //       </Provider>
+          //   }
+          // </View>
+          <HomeScreen />
         );
     
   }
