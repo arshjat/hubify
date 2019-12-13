@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux'
 import { LOGIN, SIGNUP, UPDATE_EMAIL, UPDATE_PASSWORD } from '../actions/user'
+import firebase from '../config/Firebase';
+
 
 const user = (state = {}, action) => {
     switch (action.type) {

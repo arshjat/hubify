@@ -12,9 +12,12 @@ import AppNavigator from './navigation/AppNavigator';
 import reducer  from './reducers';
 import { Text, Spinner } from 'native-base';
 
+import GET_ALL_USERS from './modules/database-api/hasuraConstants/Mutations';
+import CREATE_USER_MUTATION from './modules/database-api/hasuraConstants/Mutations'; 
+import createApolloClient from './modules/database-api/Apollo';
 
-const middleware = applyMiddleware(thunkMiddleware)
-const store = createStore(reducer, middleware)
+const middleware = applyMiddleware(thunkMiddleware);
+const store = createStore(reducer, middleware);
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
@@ -27,13 +30,46 @@ export default function App(props) {
       if(user){
         console.log(user.email);
         const idTokenResult = await user.getIdTokenResult();
+        console.log("idtokenresult :" + idTokenResult.issuedAtTime)
         const hasuraClaim = idTokenResult.claims['https://hasura.io/jwt/claims'];
-        console.log(hasuraClaim);
-
-        
-
+        console.log("hasuraClaim :" + hasuraClaim);
         setLoggingUserIn(false);
         setToggleNavigator('Profile')
+        
+        
+        if (hasuraClaim) {
+					client = createApolloClient(idTokenResult.token);
+					client.query({
+						query: GET_ALL_USERS
+					}).then(data => {
+						if (data.data.user.length === 0) {
+							client.mutate({
+								mutation: CREATE_USER_MUTATION,
+								variables: {
+                  email: idTokenResult.claims.email,
+									firebase_uid : firebase.auth().currentUser.uid,
+								}
+							}).then(() => {
+								setLoadingComplete(true);
+								setLoggingUserIn(false);
+								setToggleNavigator('Profile');
+							}).catch(err => {
+								console.log('Error adding user', err);
+							});
+						}
+						else {
+							setLoggingUserIn(false);
+							setToggleNavigator('Profile');
+						}
+					}).catch(err => {
+						console.log('Error getting document', err);
+					});
+
+        }
+        else{
+          console.log("naahhhh")
+        }
+        
       }
       else{
         console.log('not user');
