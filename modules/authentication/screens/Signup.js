@@ -1,21 +1,23 @@
 import React from 'react'
 import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native'
-import Firebase from '../../../config/Firebase'
-
-//redux
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import { updateEmail, updatePassword, signup } from '../../../actions/user'
+import Firebase from '../../../config/Firebase';
+import { saveUser } from '../../../actions';
+import { connect } from 'react-redux';
 
 class Signup extends React.Component {
     state = {
         email : '',
-        name : '',
         password : ''
     }
-    handleSignUp = () => {
-        this.props.signup()
-        this.props.navigation.navigate('Profile')
+
+    _handleSignUp = async () => {
+        const response = await Firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(()=>{
+            console.log("User Signed Up!!");
+            this.props.saveUser(firebase.auth().currentUser).then(() => {
+                console.log("User saved to local store.");
+            });
+            this.props.navigation.navigate('AuthLoader');
+        })
     }
     
     render() {
@@ -23,19 +25,19 @@ class Signup extends React.Component {
             <View style={styles.container}>
                 <TextInput
                     style={styles.inputBox}
-                    value={this.props.user.email}
-                    onChangeText={email => this.props.updateEmail(email)}
+                    value={this.state.email}
+                    onChangeText={email => this.setState({email})}
                     placeholder='Email'
                     autoCapitalize='none'
                 />
                 <TextInput
                     style={styles.inputBox}
-                    value={this.props.user.password}
-                    onChangeText={password => this.props.updatePassword(password)}
+                    value={this.state.password}
+                    onChangeText={password => this.setState({password})}
                     placeholder='Password'
                     secureTextEntry={true}
                 />
-                <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
+                <TouchableOpacity style={styles.button} onPress={this._handleSignUp}>
                     <Text style={styles.buttonText}>Signup</Text>
                 </TouchableOpacity>
             </View>
@@ -43,6 +45,8 @@ class Signup extends React.Component {
     }
 
 }
+
+export default connect(null, { saveUser })(Signup);
 
 const styles = StyleSheet.create({
     container: {
@@ -80,18 +84,3 @@ const styles = StyleSheet.create({
         fontSize: 12
     }
 })
-
-const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ updateEmail, updatePassword, signup }, dispatch)
-}
-
-const mapStateToProps = state => {
-    return {
-        user: state.user
-    }
-}
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Signup)

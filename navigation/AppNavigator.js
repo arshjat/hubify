@@ -1,6 +1,8 @@
 import { createSwitchNavigator, createAppContainer } from 'react-navigation'
 import Profile from '../modules/profile/screens/Profile'
 import Login from '../modules/authentication/screens/Login';
+import Signup from '../modules/authentication/screens/Signup';
+import AuthLoader from '../AuthLoader';
 
 const AppNavigator = createSwitchNavigator(
     {
@@ -9,10 +11,16 @@ const AppNavigator = createSwitchNavigator(
         },
         Login : {
             screen : Login
+        },
+        Signup : {
+            screen : Signup
+        },
+        AuthLoader : {
+            screen : AuthLoader
         }
     },
     {
-        initialRouteName: 'Profile'
+        initialRouteName: 'AuthLoader'
     }
 )
 

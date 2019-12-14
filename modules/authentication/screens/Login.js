@@ -1,14 +1,25 @@
-import React from 'react'
-import { View, TextInput, StyleSheet, TouchableOpacity, Text, Button } from 'react-native'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import { updateEmail, updatePassword, login } from '../../../actions/user'
-import Swiper from 'react-native-swiper'
+import React from 'react';
+import { View, TextInput, StyleSheet, TouchableOpacity, Text, Button } from 'react-native';
+import { connect } from 'react-redux';
+import Swiper from 'react-native-swiper';
+import { saveUser } from '../../../actions';
+import Firebase from '../../../config/Firebase';
+
 class Login extends React.Component {
-    handleLogin = () => {
-        this.props.login().then(()=>
-        {
-            console.log("Logged In !!");
+
+    constructor(props){
+        super(props);
+        this.state = {
+            email : '',
+            password : ''
+        };
+    }
+
+    _handleLogin = async () => {
+        await Firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then(res => {
+            console.log("User :" + res.user.email + " Logged in");
+            this.props.saveUser(res.user)
+            console.log("User saved in Local Store!");
             this.props.navigation.navigate('Profile');
         })
     }
@@ -24,19 +35,19 @@ class Login extends React.Component {
                 <View style={styles.container}>
                 <TextInput
                     style={styles.inputBox}
-                    value={this.props.user.email}
-                    onChangeText={email => this.props.updateEmail(email)}
+                    value={this.state.email}
+                    onChangeText={email => this.setState({email})}
                     placeholder='Email'
                     autoCapitalize='none'
                 />
                 <TextInput
                     style={styles.inputBox}
-                    value={this.props.user.password}
-                    onChangeText={password => this.props.updatePassword(password)}
+                    value={this.state.password}
+                    onChangeText={password => this.setState({password})}
                     placeholder='Password'
                     secureTextEntry={true}
                 />
-                <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
+                <TouchableOpacity style={styles.button} onPress={this._handleLogin}>
                     <Text style={styles.buttonText}>Login</Text>
                 </TouchableOpacity>
                 <Button
@@ -86,17 +97,4 @@ const styles = StyleSheet.create({
     }
 })
 
-const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ updateEmail, updatePassword, login }, dispatch)
-}
-
-const mapStateToProps = state => {
-    return {
-        user: state.user
-    }
-}
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Login)
+export default connect(null,{ saveUser })(Login)
