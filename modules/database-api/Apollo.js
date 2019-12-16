@@ -5,16 +5,19 @@ import { GRAPHQL_ENDPOINT } from '../../config/Hasura';
 import { ApolloLink, concat } from 'apollo-link';
 
 const createApolloClient = (token) => {
-  const httpLink = new HttpLink({
-    uri: GRAPHQL_ENDPOINT,
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    }
-  });
+	token = `Bearer ${token}`;
+	const httpLink = new HttpLink({ uri: GRAPHQL_ENDPOINT });
+	const authMiddleware = new ApolloLink((operation, forward) => {
+		operation.setContext({
+			headers: {
+				Authorization: token,
+				'Content-Type': 'application/json',
+			}
+		});
+		return forward(operation);
+	});
 
-  
-  const defaultOptions = {
+	const defaultOptions = {
 		watchQuery: {
 			fetchPolicy: 'no-cache',
 			errorPolicy: 'ignore',
@@ -25,11 +28,10 @@ const createApolloClient = (token) => {
 		},
 	};
 
-  return new ApolloClient({
-    link,
-    cache: new InMemoryCache(),
-    defaultOptions: defaultOptions
-  })
-}
-
+	return new ApolloClient({
+		link: concat(authMiddleware, httpLink),
+		cache: new InMemoryCache(),
+		defaultOptions: defaultOptions
+	});
+};
 export default createApolloClient;

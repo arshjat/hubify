@@ -4,7 +4,11 @@ import firebase from './config/Firebase';
 import { connect } from 'react-redux';
 import { Text, Spinner } from 'native-base';
 import { saveUser } from './actions';
+import { saveApolloClient } from './actions';
 import { bindActionCreators } from 'redux'
+import createApolloClient from './modules/database-api/Apollo';
+import { GET_ALL_USERS } from './modules/database-api/hasuraConstants/Queries';
+import { CREATE_USER_MUTATION } from './modules/database-api/hasuraConstants/Mutations';
 
 class AuthLoader extends React.Component {
     constructor(props){
@@ -22,8 +26,9 @@ class AuthLoader extends React.Component {
                 const idTokenResult = await user.getIdTokenResult();
                 const hasuraClaim = idTokenResult.claims['https://hasura.io/jwt/claims'];
                 if(hasuraClaim){
-                    console.log(hasuraClaim);
-                    
+                    client = createApolloClient(idTokenResult.token);
+                    this.props.saveApolloClient(client);
+                    console.log("Apollo client is saved in store (maybe)!");
                 }
                 else{
                     console.log("hasuraClaim is undefined");
@@ -57,7 +62,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ saveUser }, dispatch)
+    return bindActionCreators({ saveUser, saveApolloClient }, dispatch)
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(AuthLoader);

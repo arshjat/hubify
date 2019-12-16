@@ -3,6 +3,7 @@ import { Text, StyleSheet, Button, View } from 'react-native';
 import { connect } from 'react-redux';
 import { removeUser } from '../../../actions';
 import Firebase from '../../../config/Firebase';
+import { GET_ALL_USERS } from '../../database-api/hasuraConstants/Queries';
 
 class Profile extends React.Component {
     constructor(props){
@@ -13,14 +14,20 @@ class Profile extends React.Component {
     }
 
     componentDidMount(){
-        // const user = this.props.user;
-        const user = Firebase.auth().currentUser;
+        const user = this.props.user;
+        // const user = Firebase.auth().currentUser;
         if(user){
             this.setState({email : user.email})
-            console.log(user.email)
+            const client = this.props.apolloClient;
+            client.query({
+                query : GET_ALL_USERS
+            }).then(data => {
+                console.log(data);
+            })
         }
         else{
             console.log("No user Present");
+            this.handleLogout()
         }
     }
 
