@@ -1,6 +1,6 @@
 import { SAVE, REMOVE } from '../actions';
  
-const apollo = (state={},action) => {
+const apolloClient = (state={},action) => {
     switch(action.type){
         case SAVE :
             return action.payload
@@ -11,4 +11,4 @@ const apollo = (state={},action) => {
     }
 }
 
-export default apollo;
+export default apolloClient;

@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 import user from './userReducer';
-import apollo from './ApolloReducer';
+import apolloClient from './ApolloReducer';
 const rootReducer = combineReducers({
     user,
-    apollo
+    apolloClient
 })
 
 export default rootReducer

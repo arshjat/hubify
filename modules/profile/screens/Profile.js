@@ -19,19 +19,22 @@ class Profile extends React.Component {
         if(user){
             this.setState({email : user.email})
             const client = this.props.apolloClient;
-            client.query({
-                query : GET_ALL_USERS
-            }).then(data => {
-                console.log(data);
-            })
+            if(client){
+                console.log("Apollo Client found !")
+                client.query({
+                    query : GET_ALL_USERS
+                }).then(data => {
+                    console.log(data);
+                })
+            }
         }
         else{
             console.log("No user Present");
-            this.handleLogout()
+            this._handleLogout()
         }
     }
 
-    handleLogout = () => {
+    _handleLogout = () => {
         this.props.removeUser();
         Firebase.auth().signOut().then(()=>{
             console.log("Successfully Logged Out from Local Store and Firebase");
@@ -47,7 +50,7 @@ class Profile extends React.Component {
                 <Text>Logged in as: {this.state.email} </Text>
                 <Button
                     title="Sign Out"
-                    onPress={() => this.handleLogout()}
+                    onPress={() => this._handleLogout()}
                 />
             </View>
         );
@@ -64,5 +67,11 @@ const styles = StyleSheet.create({
     }
 })
 
+const mapStateToProps = state => {
+    return {
+        user: state.user,
+        apolloClient : state.apolloClient
+    }
+}
 
-export default connect(null,{removeUser})(Profile)
+export default connect(mapStateToProps,{removeUser})(Profile)

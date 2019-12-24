@@ -13,9 +13,9 @@ import { CREATE_USER_MUTATION } from './modules/database-api/hasuraConstants/Mut
 class AuthLoader extends React.Component {
     constructor(props){
         super(props);
-        this.state = {
-            apolloClient : {}
-        };
+        // this.state = {
+        //     apolloClient : {}
+        // };
         this._bootstrapAsync();
     }
 
@@ -28,7 +28,9 @@ class AuthLoader extends React.Component {
                 if(hasuraClaim){
                     client = createApolloClient(idTokenResult.token);
                     this.props.saveApolloClient(client);
-                    console.log("Apollo client is saved in store (maybe)!");
+                    if(client){
+                        console.log("Apollo client is saved in store (maybe)!");
+                    }
                 }
                 else{
                     console.log("hasuraClaim is undefined");
@@ -55,14 +57,14 @@ class AuthLoader extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        apolloClient: state.apolloClient
-    }
-}
+// const mapStateToProps = state => {
+//     return {
+//         apolloClient: state.apolloClient
+//     }
+// }
 
 const mapDispatchToProps = dispatch => {
     return bindActionCreators({ saveUser, saveApolloClient }, dispatch)
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(AuthLoader);
+export default connect(null,mapDispatchToProps)(AuthLoader);

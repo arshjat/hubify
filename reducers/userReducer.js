@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT, UPDATE_PASSWORD, UPDATE_ADDRESS, UPDATE_PHONE } from "../actions";
+import { LOGIN, LOGOUT } from "../actions";
 
 const user = (state = {}, action) => {
     switch (action.type) {

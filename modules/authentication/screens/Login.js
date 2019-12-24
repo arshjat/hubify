@@ -17,9 +17,9 @@ class Login extends React.Component {
 
     _handleLogin = async () => {
         await Firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then(res => {
-            this.props.saveUser(res.user)
-            console.log("User saved in Local Store!");
-            this.props.navigation.navigate('Profile');
+            // this.props.saveUser(res.user)
+            // console.log("User saved in Local Store!");
+            this.props.navigation.navigate('AuthLoader');
         })
     }
 

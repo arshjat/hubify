@@ -11,11 +11,10 @@ class Signup extends React.Component {
     }
 
     _handleSignUp = async () => {
-        const response = await Firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(()=>{
+        await Firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(()=>{
             console.log("User Signed Up!!");
-            this.props.saveUser(firebase.auth().currentUser).then(() => {
-                console.log("User saved to local store.");
-            });
+            this.props.saveUser(firebase.auth().currentUser)
+            console.log("User saved to local store.");
             this.props.navigation.navigate('AuthLoader');
         })
     }
